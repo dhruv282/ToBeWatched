@@ -128,21 +128,41 @@ function Post(props: {data: movie, scheme: "light" | "dark"}){
         marginBottom: 10,
       }}>{props.data.release_date}</Text>
 
-      <Text style={{
-        fontSize: 13,
-        marginLeft: 115,
-        marginBottom: 10,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: Colors[props.scheme].tabIconSelected,
-        color: Colors[props.scheme].text,
-        backgroundColor: Colors[props.scheme].genreBackground,
-        textAlign: "center",
-        alignItems: "center",
-        paddingLeft: 5,
-        paddingRight: 5,
-        alignSelf: 'flex-start',
-      }}>{genre}</Text>
+      {
+        genre.length > 0 && (<Text style={{
+          fontSize: 13,
+          marginLeft: 115,
+          marginBottom: 10,
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: Colors[props.scheme].tabIconSelected,
+          color: Colors[props.scheme].text,
+          backgroundColor: Colors[props.scheme].genreBackground,
+          textAlign: "center",
+          alignItems: "center",
+          paddingLeft: 5,
+          paddingRight: 5,
+          alignSelf: 'flex-start',
+        }}>{genre}</Text>)
+      }
+
+      {
+        genre.length == 0 && (<Text style={{
+          fontSize: 13,
+          marginLeft: 115,
+          marginBottom: 10,
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: Colors[props.scheme].searchBar,
+          color: Colors[props.scheme].text,
+          backgroundColor: Colors[props.scheme].searchBar,
+          textAlign: "center",
+          alignItems: "center",
+          paddingLeft: 5,
+          paddingRight: 5,
+          alignSelf: 'flex-start',
+        }}>{genre}</Text>)
+      }
 
       <Image
         source={props.data.backdrop_path ? {uri: `https://image.tmdb.org/t/p/w500${props.data.backdrop_path}`} : require('../assets/images/icon.png')}
