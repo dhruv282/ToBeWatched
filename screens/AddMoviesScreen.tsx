@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, Image } from 'react-native';
 
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import {ItemSearchBar, SearchResultsList, Post} from '../components/searchBar';
 import useColorScheme from '../hooks/useColorScheme';
-import Colors from '../constants/Colors';
-import { movie, searchMovie, getMovieGenre } from '../hooks/tmdbAPI';
+import { searchMovie, getMovieGenre } from '../hooks/tmdbAPI';
+import AppContext from '../components/AppContext';
 
 export default function AddMoviesScreen() {
   const [search, setState] = React.useState("")
   const [searchResults, setResults] = React.useState([])
   const colorScheme = useColorScheme();
-
+  const listContext = React.useContext(AppContext);
+  
   return (
     <View style={{height: "100%"}}>
       <ItemSearchBar
@@ -28,6 +29,8 @@ export default function AddMoviesScreen() {
         colorScheme={colorScheme}
         item={"Movie"}
         getItemGenre={getMovieGenre}
+        itemList={listContext.addedMovieList}
+        setItemList={listContext.setMovieList}
       />
     </View>
   );

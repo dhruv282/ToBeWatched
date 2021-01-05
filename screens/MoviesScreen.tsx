@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 35,
-
   },
   separator: {
     marginVertical: 30,

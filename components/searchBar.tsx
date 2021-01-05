@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ListItem, SearchBar } from 'react-native-elements';
-import { FlatList, StyleSheet, Image } from 'react-native';
+import { FlatList, TouchableOpacity, Image } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import Colors from '../constants/Colors';
@@ -46,7 +46,7 @@ export function ItemSearchBar(props: {colorScheme: "light" | "dark", placeholder
 }
 
 
-export function SearchResultsList(props: {searchResults: any, colorScheme: "light" | "dark", item: "Movie" | "TV Show", getItemGenre: any}){
+export function SearchResultsList(props: {searchResults: any, colorScheme: "light" | "dark", item: "Movie" | "TV Show", getItemGenre: any, itemList: Array<movie> | Array<tvShow>, setItemList: any}){
     return(
         <FlatList
             data={props.searchResults}
@@ -65,7 +65,7 @@ export function SearchResultsList(props: {searchResults: any, colorScheme: "ligh
             keyExtractor={(item: movie | tvShow) => item.id.toString()}
             renderItem={({ item }) => {
             return (
-                <Post data={item} scheme={props.colorScheme} getItemGenre={props.getItemGenre} />
+                <Post data={item} scheme={props.colorScheme} getItemGenre={props.getItemGenre} itemList={props.itemList} setItemList={props.setItemList}/>
             );
             }}
         />
@@ -73,7 +73,7 @@ export function SearchResultsList(props: {searchResults: any, colorScheme: "ligh
 }
 
 
-export function Post(props: {data: movie | tvShow, scheme: "light" | "dark", getItemGenre: any}){
+export function Post(props: {data: movie | tvShow, scheme: "light" | "dark", getItemGenre: any, itemList: Array<movie> | Array<tvShow>, setItemList: any}){
     let overview = props.data.overview;
     if(overview.length > 250){
       overview = overview.substring(0,250) + "...";
@@ -113,7 +113,29 @@ export function Post(props: {data: movie | tvShow, scheme: "light" | "dark", get
           flexDirection: 'row',
       
         }}>{title}</Text>
-  
+
+        <TouchableOpacity onPress={() => {
+          props.setItemList([...props.itemList, props.data]);
+        }} style={{
+            position: 'absolute',
+            top: 5,
+            right: 5,
+            backgroundColor: Colors[props.scheme].genreBackground,
+            borderWidth: 1,
+            borderColor: Colors[props.scheme].tabIconSelected,
+            elevation: 5,    
+            borderRadius: 100,
+            height: 25,
+            width: 25,
+            alignItems: 'center',
+          }}>
+          <Text style={{
+            color: Colors[props.scheme].tabIconSelected,
+            fontSize: 25,
+            bottom: 6,
+          }}>+</Text>
+        </TouchableOpacity>
+
         <Text style={{
           marginTop: 5,
           marginLeft: 115,

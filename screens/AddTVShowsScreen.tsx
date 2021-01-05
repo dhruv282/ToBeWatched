@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, Image } from 'react-native';
-import { SearchBar } from 'react-native-elements';
 
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import {ItemSearchBar, SearchResultsList, Post} from '../components/searchBar';
 import useColorScheme from '../hooks/useColorScheme';
-import Colors from '../constants/Colors'
-import { tvShow, searchTVShow, getTVShowGenre } from '../hooks/tmdbAPI'
+import { searchTVShow, getTVShowGenre } from '../hooks/tmdbAPI';
+import AppContext from '../components/AppContext';
 
 export default function AddTVShowsScreen() {
   const [search, setState] = React.useState("")
   const [searchResults, setResults] = React.useState([])
   const colorScheme = useColorScheme();
+  const listContext = React.useContext(AppContext);
 
   return (
     <View style={{height: "100%"}}>
@@ -29,6 +29,8 @@ export default function AddTVShowsScreen() {
         colorScheme={colorScheme}
         item={"TV Show"}
         getItemGenre={getTVShowGenre}
+        itemList={listContext.addedTVShowList}
+        setItemList={listContext.setTVShowList}
       />
     </View>
   );
