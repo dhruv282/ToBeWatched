@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FlatList, StyleSheet, Image } from 'react-native';
 
 import { View } from '../components/Themed';
-import {ItemSearchBar, SearchResultsList, Post} from '../components/searchBar';
+import {ItemSearchBar, SearchResultsList} from '../components/searchBar';
 import useColorScheme from '../hooks/useColorScheme';
 import { searchTVShow, getTVShowGenre } from '../hooks/tmdbAPI';
 import AppContext from '../components/AppContext';

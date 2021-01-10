@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { ListItem, SearchBar } from 'react-native-elements';
 import { FlatList, TouchableOpacity, Image } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 import { Text, View } from '../components/Themed';
+import ItemListing from '../components/ItemListing';
 import Colors from '../constants/Colors';
 import { movie, tvShow } from '../hooks/tmdbAPI';
 
@@ -65,171 +67,52 @@ export function SearchResultsList(props: {searchResults: any, colorScheme: "ligh
             keyExtractor={(item: movie | tvShow) => item.id.toString()}
             renderItem={({ item }) => {
             return (
-                <Post data={item} scheme={props.colorScheme} getItemGenre={props.getItemGenre} itemList={props.itemList} setItemList={props.setItemList}/>
+              <View>
+                <ItemListing data={item} scheme={props.colorScheme} getItemGenre={props.getItemGenre} >
+                <SearchResultButton data={item} scheme={props.colorScheme} itemList={props.itemList} setItemList={props.setItemList} />
+                </ItemListing>
+              </View>
             );
             }}
         />
     );
 }
 
-
-export function Post(props: {data: movie | tvShow, scheme: "light" | "dark", getItemGenre: any, itemList: Array<movie> | Array<tvShow>, setItemList: any}){
-    let overview = props.data.overview;
-    if(overview.length > 250){
-      overview = overview.substring(0,250) + "...";
-    }
-    
-    let title = ""
-    if("title" in props.data){
-        title = props.data.title;
-        if(title.length > 30){
-        title = title.substring(0,30) + "...";
-        }
-    } else if("name" in props.data){
-        title = props.data.name;
-        if(title.length > 30){
-        title = title.substring(0,30) + "...";
-        }
-    }
-  
-    let lang = props.data.original_language;
-    lang = lang.toUpperCase();
-  
-    let [genre, setGenre] = React.useState("");
-    props.getItemGenre(props.data.genre_ids[0]).then((res: string | undefined='') => setGenre(res));
-    return(
-      <View style={{
-        borderRadius: 10,
-        margin: '2%',
-        backgroundColor: Colors[props.scheme].searchBar,
+function SearchResultButton(props: {data: movie | tvShow, scheme: "light" | "dark", itemList: Array<movie> | Array<tvShow>, setItemList: any}) {
+  return(
+    <View style={{
+      backgroundColor: Colors[props.scheme].searchBar,
+      marginLeft: 345,
+      marginTop: -15,
+    }}>
+    { props.itemList.findIndex((item: movie | tvShow) => item.id === props.data.id) == -1 && (<TouchableOpacity onPress={() => {
+      props.setItemList([...props.itemList, props.data]);
+    }} style={{
+        zIndex: 10,
+        backgroundColor: Colors[props.scheme].genreBackground,
+        borderWidth: 1,
+        borderColor: Colors[props.scheme].tabIconSelected,
+        elevation: 5,
+        borderRadius: 100,
+        height: 25,
+        width: 25,
+        alignItems: 'center',
       }}>
-  
-        <Text style={{
-          marginLeft: 115,
-          marginTop: 5,
-          color: Colors[props.scheme].text,
-          fontSize: 13,
-          fontWeight: "bold",
-          flexDirection: 'row',
-      
-        }}>{title}</Text>
+      <Text style={{
+        color: Colors[props.scheme].tabIconSelected,
+        fontSize: 25,
+        bottom: 6,
+      }}>+</Text>
+    </TouchableOpacity>)}
 
-        <TouchableOpacity onPress={() => {
-          props.setItemList([...props.itemList, props.data]);
-        }} style={{
-            position: 'absolute',
-            top: 5,
-            right: 5,
-            backgroundColor: Colors[props.scheme].genreBackground,
-            borderWidth: 1,
-            borderColor: Colors[props.scheme].tabIconSelected,
-            elevation: 5,    
-            borderRadius: 100,
-            height: 25,
-            width: 25,
-            alignItems: 'center',
-          }}>
-          <Text style={{
-            color: Colors[props.scheme].tabIconSelected,
-            fontSize: 25,
-            bottom: 6,
-          }}>+</Text>
-        </TouchableOpacity>
-
-        <Text style={{
-          marginTop: 5,
-          marginLeft: 115,
-          marginRight: '63%',
-          backgroundColor: Colors[props.scheme].searchBackground,
-          color: Colors[props.scheme].lang,
-          borderWidth: 1,
-          borderColor: Colors[props.scheme].lang,
-          paddingLeft: "1.5%",
-          fontSize: 10,
-        }}>{lang}</Text>
-  
-        <Text style={{
-          color: Colors[props.scheme].text,
-          fontSize: 13,
-          fontWeight: "bold",
-          marginLeft: 115,
-          marginTop: 5,
-        }}>Release Date</Text>
-  
-        <Text style={{
-          color: Colors[props.scheme].text,
-          fontSize: 11,
-          marginRight: "1%",
-          marginLeft: 115,
-          marginBottom: 10,
-        }}>{props.data.release_date}</Text>
-  
-        {
-          genre.length > 0 && (<Text style={{
-            fontSize: 13,
-            marginLeft: 115,
-            marginBottom: 10,
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: Colors[props.scheme].tabIconSelected,
-            color: Colors[props.scheme].text,
-            backgroundColor: Colors[props.scheme].genreBackground,
-            textAlign: "center",
-            alignItems: "center",
-            paddingLeft: 5,
-            paddingRight: 5,
-            alignSelf: 'flex-start',
-          }}>{genre}</Text>)
-        }
-  
-        {
-          genre.length == 0 && (<Text style={{
-            fontSize: 13,
-            marginLeft: 115,
-            marginBottom: 10,
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: Colors[props.scheme].searchBar,
-            color: Colors[props.scheme].text,
-            backgroundColor: Colors[props.scheme].searchBar,
-            textAlign: "center",
-            alignItems: "center",
-            paddingLeft: 5,
-            paddingRight: 5,
-            alignSelf: 'flex-start',
-          }}>{genre}</Text>)
-        }
-  
-        <Image
-          source={props.data.backdrop_path ? {uri: `https://image.tmdb.org/t/p/w500${props.data.backdrop_path}`} : require('../assets/images/icon.png')}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 10,
-            marginLeft: 5,
-            marginTop: -115,
-            borderWidth: 2,
-            borderColor: Colors[props.scheme].imgBorder,
-          }}
-        />
-        
-        <Text style={{
-          color: Colors[props.scheme].text,
-          fontSize: 13,
-          fontWeight: "bold",
-          marginLeft: 5,
-          marginTop: 5,
-        }}>Overview</Text>
-  
-        <Text style={{
-          color: Colors[props.scheme].text,
-          fontSize: 11,
-          marginRight: "1%",
-          marginLeft: 5,
-          marginBottom: 10,
-        }}>{overview}</Text>
-  
-      </View>
-    );
-  }
-  
+    { props.itemList.findIndex((item: movie | tvShow) => item.id === props.data.id) > -1 && (
+      <AntDesign name="checkcircleo" size={24} style={{
+        zIndex: 10,
+        color: Colors[props.scheme].checkMark,
+        backgroundColor: Colors[props.scheme].genreBackground,
+        borderRadius: 100,
+        marginRight: '20%',
+      }} />)}
+    </View>
+  );
+}
