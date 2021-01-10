@@ -66,7 +66,7 @@ export default function TVShowsScreen({navigation}: Props) {
           return (
             <Text style={{
               textAlign: "center",
-              marginTop: '200%',
+              marginTop: '170%',
               fontSize: 20,
               backgroundColor: Colors[colorScheme].background,
               color: Colors[colorScheme].searchBar,
