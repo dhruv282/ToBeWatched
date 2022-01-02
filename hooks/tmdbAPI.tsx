@@ -27,9 +27,12 @@ export interface tvShow {
     release_date: string,
 }
 
+const TMDB_API_BASE_URL = "https://api.themoviedb.org/3/";
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
+
 export async function searchMovie(searchQuery: string) {
     try {
-        let response = await fetch(process.env.TMDB_API_BASE_URL+"/search/movie?api_key="+process.env.TMDB_API_KEY+"&query="+searchQuery);
+        let response = await fetch(TMDB_API_BASE_URL+"search/movie?api_key="+TMDB_API_KEY+"&query="+searchQuery);
         let json = await response.json();
         return json.results.slice(0,5);
     } catch (err) {
@@ -39,7 +42,7 @@ export async function searchMovie(searchQuery: string) {
 
 export async function getMovieGenre(genreID: string) {
     try {
-        let response = await fetch(process.env.TMDB_API_BASE_URL+"/genre/movie/list?api_key="+process.env.TMDB_API_KEY);
+        let response = await fetch(TMDB_API_BASE_URL+"genre/movie/list?api_key="+TMDB_API_KEY);
         let json = await response.json();
         let genre = '';
         json.genres.forEach((item: genre) => {
@@ -56,7 +59,7 @@ export async function getMovieGenre(genreID: string) {
 
 export async function searchTVShow(searchQuery: string) {
     try {
-        let response = await fetch(process.env.TMDB_API_BASE_URL+"/search/tv?api_key="+process.env.TMDB_API_KEY+"&query="+searchQuery);
+        let response = await fetch(TMDB_API_BASE_URL+"search/tv?api_key="+TMDB_API_KEY+"&query="+searchQuery);
         let json = await response.json();
         return json.results.slice(0,5);;
     } catch (err) {
@@ -66,7 +69,7 @@ export async function searchTVShow(searchQuery: string) {
 
 export async function getTVShowGenre(genreID: string) {
     try {
-        let response = await fetch(process.env.TMDB_API_BASE_URL+"/genre/tv/list?api_key="+process.env.TMDB_API_KEY);
+        let response = await fetch(TMDB_API_BASE_URL+"genre/tv/list?api_key="+TMDB_API_KEY);
         let json = await response.json();
         let genre = '';
         json.genres.forEach((item: genre) => {
